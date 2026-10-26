@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: bsc-dex-arb-bot
+    runtime: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python3 server.py"
+    envVars:
+      - key: MODE
+        value: mock
+      - key: EXECUTION
+        value: paper
+      - key: LIVE_TRADING_ENABLED
+        value: "false"
+      - key: MIN_PROFIT_USD
+        value: "5"
+      - key: MAX_TRADE_USD
+        value: "25"
