@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "scan": "node adapter.mjs",
-    "compile": "npx hardhat compile"
+    "compile": "npx hardhat compile",
+    "fork:sim": "npx hardhat test test/fork-simulation.test.js"
   },
   "dependencies": {
     "ethers": "^6.15.0"
