@@ -1,0 +1,15 @@
+{
+  "name": "bsc-dex-arb-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scan": "node adapter.mjs",
+    "compile": "npx hardhat compile"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.18"
+  }
+}

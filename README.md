@@ -1,42 +1,41 @@
-# Minimal DEX Arbitrage Box
+# BSC DEX Arbitrage Bot
 
-A deliberately safe starter for a DEX arbitrage scanner and paper-trading executor.
+This repository contains a safe staged arbitrage system:
 
-## Safety defaults
+- `arb_box.py` and `server.py`: live RPC connectivity probe plus paper scanner.
+- `adapter.mjs`: ethers.js read-only V2-router quote adapter. It only builds/prints quote data and never signs or submits.
+- `contracts/AtomicArbExecutor.sol`: guarded two-leg executor with owner control, router/token allowlists, pause switch, trade cap, deadline, slippage minima, and minimum-profit enforcement.
+- `hardhat.config.js`: optimizer/via-IR compilation configuration.
 
-- `MODE=mock`: uses deterministic sample quotes; no wallet or RPC is needed.
-- `EXECUTION=paper`: records simulated trades only.
-- Live trading is not implemented/enabled in this starter.
-- No private keys are accepted by the program.
+## Current safety state
 
-Atomic arbitrage can prevent a failed on-chain trade from leaving a flash-loan principal unpaid, but it cannot guarantee profit. This project is for learning and simulation only.
+The Render service is configured for `MODE=mainnet`, `EXECUTION=paper`, and `LIVE_TRADING_ENABLED=false`. The current scanner uses mock prices for paper fills. The Solidity executor is **not deployed** and does not include a flash-loan/pair callback adapter. Do not fund or enable live signing based on this repository alone.
 
-## Run
+## Read-only adapter configuration
 
-```bash
-cd /home/ubuntu/dex-arb-box
-python3 arb_box.py --once
-python3 arb_box.py --once --show-all
-python3 arb_box.py --cycles 5 --interval 2
+Set these only as server-side configuration values, never in frontend code:
+
+```text
+RPC_ENV_NAME=BSC_RPC_URL
+ROUTER_A_ADDRESS=0x...
+ROUTER_B_ADDRESS=0x...
+TOKEN_IN_ADDRESS=0x...
+TOKEN_MID_ADDRESS=0x...
+TOKEN_IN_DECIMALS=18
+TOKEN_MID_DECIMALS=18
+AMOUNT_IN=1
 ```
 
-Paper fills are appended to `data/paper_trades.jsonl`.
+Run:
 
-## Configuration
+```bash
+npm install
+npm run compile
+npm run scan
+```
 
-Environment variables:
+`npm run scan` performs read-only `getAmountsOut` calls and exits if the required configuration is missing. It does not use `EXECUTOR_PRIVATE_KEY` and cannot submit a transaction.
 
-- `MIN_PROFIT_USD` (default `5`)
-- `GAS_USD` (default `0.35`)
-- `FLASH_FEE_BPS` (default `9`)
-- `SLIPPAGE_BPS` (default `20`)
-- `TRADE_SIZE_USD` (default `10000`)
-- `MODE` must remain `mock` in this starter
-- `EXECUTION` must remain `paper` in this starter
+## Required before any real execution
 
-## What to add later, safely
-
-1. Replace `MockQuoteSource` with a read-only quote source.
-2. Add fork/testnet simulation and transaction tracing.
-3. Add an audited executor contract with minimum-profit and deadline checks.
-4. Only after independent testing should any live signing path be considered—and it should use a dedicated wallet with strict limits, not a personal wallet.
+A separate, reviewed flash-loan/flash-swap callback module, fork simulation, deployed-and-verified contract, transaction tracing, router/token address verification, nonce handling, gas controls, emergency pause testing, and independent security review are still required. Mainnet signing remains intentionally disabled.
