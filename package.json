@@ -1,16 +1,23 @@
 {
   "name": "bsc-dex-arb-bot",
-  "private": true,
+  "version": "0.2.0",
+  "description": "Read-only BSC DEX route scanner, paper-trading service, and guarded executor reference implementation",
+  "private": false,
   "type": "module",
   "scripts": {
+    "check": "node scripts/check-config.mjs",
     "scan": "node adapter.mjs",
+    "scan:routes": "node scanner/quote-scanner.mjs",
     "compile": "npx hardhat compile",
-    "fork:sim": "npx hardhat test test/fork-simulation.test.js"
+    "test": "npx hardhat test",
+    "fork:sim": "npx hardhat test test/fork-simulation.test.js",
+    "deploy:local": "npx hardhat run scripts/deploy-executor.js --network hardhat"
   },
   "dependencies": {
     "ethers": "^6.15.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "hardhat": "^2.22.18"
   }
 }

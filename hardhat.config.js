@@ -1,3 +1,5 @@
+import "@nomicfoundation/hardhat-ethers";
+
 export default {
   solidity: {
     version: "0.8.24",

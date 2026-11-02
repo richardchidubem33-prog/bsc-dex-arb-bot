@@ -66,7 +66,7 @@ class RpcProbe:
         return {"connected": True, "chain_id": int(chain_hex, 16), "latest_block": int(block_hex, 16)}
 
 def settings() -> dict[str, float | str | bool]:
-    mode = os.getenv("MODE", "mainnet").lower()
+    mode = os.getenv("MODE", "mock").lower()
     execution = os.getenv("EXECUTION", "paper").lower()
     live_enabled = os.getenv("LIVE_TRADING_ENABLED", "false").lower() == "true"
     # Mainnet data is allowed; transaction execution is intentionally not implemented.
